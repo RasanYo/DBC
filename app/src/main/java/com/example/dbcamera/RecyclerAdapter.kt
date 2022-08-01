@@ -59,12 +59,26 @@ class RecyclerAdapter(
         notifyItemInserted(labels.size - 1)
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
     fun addSubLabel(label: Label) {
+        addSubLabelRecursive(labels, label)
+        notifyDataSetChanged()
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun addSubLabelRecursive(labels: MutableList<Label>, label: Label) {
+        labels.forEach {
+            val currentSublabels = mutableListOf<Label>()
+            currentSublabels.addAll(it.getSubLabels())
+            addSubLabelRecursive(currentSublabels, label)
+        }
         labels
             .filter { it.isChecked }
-            .forEach { it.addLabel(label) }
-        notifyDataSetChanged()
+            .forEach {
+                it.addSublabel(label)
+            }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -84,5 +98,9 @@ class RecyclerAdapter(
             val labelDir = File("$mainDir/${it.getName()}")
             if(!labelDir.exists()) labelDir.mkdirs()
         }
+    }
+
+    fun labelsToString(): String {
+        return labels.toString()
     }
 }

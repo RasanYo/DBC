@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             **/
 
+            Log.i("Labels", "\n$labels")
+
         }
 
 
