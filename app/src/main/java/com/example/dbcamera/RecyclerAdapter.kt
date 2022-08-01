@@ -2,6 +2,7 @@ package com.example.dbcamera
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +35,16 @@ class RecyclerAdapter(
         val currentLabel = labels[position]
         holder.itemTitle.text = currentLabel.getName()
         holder.itemCheck.isChecked = currentLabel.isChecked
+        holder.itemCheck.setOnCheckedChangeListener { _, isChecked ->
+            currentLabel.isChecked = isChecked
+            Log.i("Label ${currentLabel.getName()}", "is ${isChecked.toString()}")
+        }
+
+
 
         val subLabels = mutableListOf<Label>()
         subLabels.addAll(currentLabel.getSubLabels())
-        val adapter = RecyclerAdapter(subLabels)
+        val adapter = RecyclerAdapter(subLabels, folderName, "$folderPath/${currentLabel.getName()}/")
         holder.itemSublabels.layoutManager = LinearLayoutManager(holder.itemView.context)
         holder.itemSublabels.adapter = adapter
 
@@ -53,8 +60,10 @@ class RecyclerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addSubLabel(label: Label, parentLabelIndex: Int) {
-        labels[parentLabelIndex].addLabel(label)
+    fun addSubLabel(label: Label) {
+        labels
+            .filter { it.isChecked }
+            .forEach { it.addLabel(label) }
         notifyDataSetChanged()
     }
 

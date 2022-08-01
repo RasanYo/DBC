@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var etLabelName : EditText
     lateinit var btnAddLabel: Button
     lateinit var btnFinishLabels: Button
+    lateinit var btnAddSublabel: Button
+    lateinit var btnDelete: Button
 
     lateinit var labelAdapter: RecyclerAdapter
 
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         etLabelName = findViewById(R.id.etLabelName)
         btnAddLabel = findViewById(R.id.btnAddLabel)
         btnFinishLabels = findViewById(R.id.btnFinishLabels)
+        btnAddSublabel = findViewById(R.id.btnAddSublabel)
+        btnDelete = findViewById(R.id.btnDelete)
+
 
         rvLabels.layoutManager = LinearLayoutManager(this)
         labelAdapter = RecyclerAdapter(labels)
@@ -45,20 +50,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        btnAddSublabel.setOnClickListener {
+            val labelName = etLabelName.text.toString()
+            etLabelName.setText("")
+            if (labelName.isNotEmpty()) {
+                val label = Label(labelName)
+                labelAdapter.addSubLabel(label)
+                Log.i("New Label", labelName)
+            }
+        }
+
 
         btnFinishLabels.setOnClickListener {
             /**
             val intent = Intent(this, MainActivity(labels)::class.java)
             startActivity(intent)
             **/
-            // labelAdapter.createFolders()
-            val labelName = etLabelName.text.toString()
-            etLabelName.setText("")
-            if (labelName.isNotEmpty() && labelAdapter.itemCount != 0) {
-                val label = Label(labelName)
-                labelAdapter.addSubLabel(label, 0)
-                Log.i("New Label", labelName)
-            }
 
         }
 
