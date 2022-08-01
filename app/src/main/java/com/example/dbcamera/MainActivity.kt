@@ -51,7 +51,15 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity(labels)::class.java)
             startActivity(intent)
             **/
-            labelAdapter.createFolders()
+            // labelAdapter.createFolders()
+            val labelName = etLabelName.text.toString()
+            etLabelName.setText("")
+            if (labelName.isNotEmpty() && labelAdapter.itemCount != 0) {
+                val label = Label(labelName)
+                labelAdapter.addSubLabel(label, 0)
+                Log.i("New Label", labelName)
+            }
+
         }
 
 

@@ -6,8 +6,8 @@ class Label(_name: String) {
     var isChecked: Boolean = false
     private val subLabels: MutableList<Label> = mutableListOf()
 
-    fun addLabel(label: Label): Boolean {
-        return subLabels.add(label)
+    fun addLabel(label: Label) {
+        subLabels.add(label)
     }
 
     fun getSubLabels(): List<Label> {

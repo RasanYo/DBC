@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import java.io.FileOutputStream
@@ -20,6 +21,7 @@ class RecyclerAdapter(
 
         var itemTitle: TextView = itemView.findViewById(R.id.tvLabelTitle)
         var itemCheck: CheckBox = itemView.findViewById(R.id.cbSelected)
+        var itemSublabels: RecyclerView = itemView.findViewById(R.id.rvSublabels)
 
     }
 
@@ -32,6 +34,13 @@ class RecyclerAdapter(
         val currentLabel = labels[position]
         holder.itemTitle.text = currentLabel.getName()
         holder.itemCheck.isChecked = currentLabel.isChecked
+
+        val subLabels = mutableListOf<Label>()
+        subLabels.addAll(currentLabel.getSubLabels())
+        val adapter = RecyclerAdapter(subLabels)
+        holder.itemSublabels.layoutManager = LinearLayoutManager(holder.itemView.context)
+        holder.itemSublabels.adapter = adapter
+
     }
 
     override fun getItemCount(): Int {
@@ -41,6 +50,12 @@ class RecyclerAdapter(
     fun addLabel(label: Label) {
         labels.add(label)
         notifyItemInserted(labels.size - 1)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addSubLabel(label: Label, parentLabelIndex: Int) {
+        labels[parentLabelIndex].addLabel(label)
+        notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
